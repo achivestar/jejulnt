@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="survey">
+
+	<insert id="insert" parameterType="com.pe.bluering.vo.surveyOffVO"
+		useGeneratedKeys="true" keyProperty="idx">
+		<![CDATA[
+
+			INSERT INTO km_lnt_survey
+			(
+			age,gender,area,name,phone,
+			ans5,ans6,ans7,ans8,ans9,ans10,
+			ans11,ans12,ans13,ans14,ans15,
+			ans16,ans17,ans18,ans19,ans20,
+			ans21,ans22,ans23,ans24,ans25,
+			ans26,ans27,ans28,ans29,agreename,regdate
+			) 
+			VALUES(
+			#{age},#{gender},#{area},#{name},#{phone},
+			#{ans5},#{ans6},#{ans7},#{ans8},#{ans9},#{ans10},
+			#{ans11},#{ans12},#{ans13},#{ans14},#{ans15},
+			#{ans16},#{ans17},#{ans18},#{ans19},#{ans20},
+			#{ans21},#{ans22},#{ans23},#{ans24},#{ans25},
+			#{ans26},#{ans27},#{ans28},#{ans29},#{agreename},now()
+			)
+		]]>
+	</insert>
+
+
+
+	<!-- 게시물 총 갯수 -->
+	<select id="surveyCount" resultType="int" parameterType="com.pe.bluering.vo.surveyOffVO">
+	 	select count(idx) from km_lnt_survey; 
+	</select>
+	
+	
+
+</mapper>

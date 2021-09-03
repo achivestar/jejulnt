@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="thumb">
+
+	<select id="selectActiveListIndex" parameterType="com.pe.bluering.vo.thumbVO" resultType="com.pe.bluering.vo.thumbVO">
+		 <![CDATA[
+			SELECT *  FROM km_lnt_contents where view= 'y' ORDER BY idx desc limit 2;
+		]]>
+	</select>
+	
+	<select id="selectNoticeListIndex" parameterType="com.pe.bluering.vo.thumbVO" resultType="com.pe.bluering.vo.thumbVO">
+		 <![CDATA[
+			SELECT *  FROM km_lnt_notice where view= 'y' ORDER BY idx desc limit 3;
+		]]>
+	</select>
+
+	<insert id="contentsInsert" parameterType="com.pe.bluering.vo.thumbVO" useGeneratedKeys="true" keyProperty="idx">
+		<![CDATA[
+			insert into km_lnt_contents (subject,contents,writer,saveFileName,originalFileName) values (#{subject}, #{contents},#{writer},#{saveFileName}, #{originalFileName});
+		]]>
+	</insert>
+	
+	<select id="getIdx" resultType="int" parameterType="com.pe.bluering.vo.thumbVO">
+		 select max(idx) AS idx from km_lnt_contents; 
+	</select>
+	
+	<select id="getNoticeIdx" resultType="int" parameterType="com.pe.bluering.vo.thumbVO">
+		 select max(idx) AS idx from km_lnt_notice; 
+	</select>
+	
+	<select id="selectActiveList" parameterType="com.pe.bluering.vo.thumbVO" resultType="com.pe.bluering.vo.thumbVO">
+		 <![CDATA[
+			SELECT *  FROM km_lnt_contents where view= 'y' and  1=1 ORDER BY idx desc 
+			limit #{displayPost}, #{postNum};
+		]]>
+	</select>
+
+	
+	<select id="modifyActive" parameterType="int" resultType="com.pe.bluering.vo.thumbVO">
+		 <![CDATA[
+			SELECT *  FROM km_lnt_contents where idx = #{idx};
+		]]>
+	</select>
+	
+	
+	
+	
+	<select id="getMemberCount"  resultType="int">
+		 <![CDATA[
+				SELECT  COUNT(idx) AS idx FROM km_lnt_member
+		]]>
+	</select>
+	
+	
+	<select id="getCommentCount" parameterType="com.pe.bluering.vo.thumbVO" resultType="com.pe.bluering.vo.thumbVO">
+		 <![CDATA[
+				SELECT  COUNT(num) AS idx FROM km_lnt_reple
+				GROUP BY num
+		]]>
+	</select>
+	
+	<select id="getMember" parameterType="com.pe.bluering.vo.memberVO" resultType="com.pe.bluering.vo.memberVO">
+		 <![CDATA[
+				SELECT * FROM km_lnt_member where  1=1 ORDER BY idx desc 
+				limit #{displayPost}, #{postNum};
+		]]>
+	</select>
+	
+	
+	
+	<update id="updateActive" parameterType="com.pe.bluering.vo.thumbVO">
+		<![CDATA[
+			update km_lnt_contents set
+			subject = #{subject},
+			contents = #{contents},
+			saveFileName = #{saveFileName},
+			originalFileName = #{originalFileName}
+			where
+			idx = #{idx}; 
+		]]>
+	</update>
+	
+
+	<update id="delete" parameterType="int">
+				<![CDATA[
+					update km_lnt_contents set
+					view = 'n'
+					where
+					idx = #{idx};
+				]]>
+	</update>
+	
+	<update id="updateHit" parameterType="int">
+				<![CDATA[
+					update km_lnt_contents set
+					hit = hit+1
+					where
+					idx = #{idx};
+				]]>
+	</update>
+	
+	
+	
+	
+	<select id="getDeleteFileName" parameterType="int"  resultType="String">
+			<![CDATA[
+				select saveFileName from km_lnt_contents
+				where
+				idx = #{idx};
+			]]>
+	</select>
+	
+	<select id="getSaveFileName" parameterType="int"  resultType="String">
+			<![CDATA[
+				select saveFileName from km_lnt_contents
+				where
+				idx = #{idx};
+			]]>
+	</select>
+	
+	<select id="getOriginFileName" parameterType="int"  resultType="String">
+			<![CDATA[
+				select originalFileName from km_lnt_contents
+				where
+				idx = #{idx};
+			]]>
+	</select>
+	
+	<select id="getDeleteNoticeFileName" parameterType="int"  resultType="String">
+			<![CDATA[
+				select saveFileName from km_lnt_notice
+				where
+				idx = #{idx};
+			]]>
+	</select>
+	
+	<select id="getSaveNoticeFileName" parameterType="int"  resultType="String">
+			<![CDATA[
+				select saveFileName from km_lnt_notice
+				where
+				idx = #{idx};
+			]]>
+	</select>
+	
+	<select id="getOriginNoticeFileName" parameterType="int"  resultType="String">
+			<![CDATA[
+				select originalFileName from km_lnt_notice
+				where
+				idx = #{idx};
+			]]>
+	</select>
+	
+	<select id="getCount"  resultType="int">
+			<![CDATA[
+				SELECT COUNT(idx) AS idx FROM km_lnt_contents;
+			]]>
+	</select>
+	
+	<select id="getActiveCount"  resultType="int">
+			<![CDATA[
+				SELECT COUNT(idx) AS idx FROM km_lnt_contents where view='y';
+			]]>
+	</select>
+		
+
+	<select id="getNoticeCount"  resultType="int">
+			<![CDATA[
+				SELECT COUNT(idx) AS idx FROM km_lnt_notice where view='y';
+			]]>
+	</select>
+
+	<insert id="memberReigst" parameterType="com.pe.bluering.vo.memberVO" useGeneratedKeys="true" keyProperty="idx">
+		<![CDATA[
+			insert into km_lnt_member
+			(email,password,name,phone)
+			values
+			(#{email},hex(aes_encrypt(#{password},#{name})),#{name},#{phone});
+		]]>
+	</insert>
+	
+	
+	
+	
+	
+	<!-- 로그인 -->
+	<select id="signin" resultType="com.pe.bluering.vo.memberVO">
+	 select
+	     email, AES_DECRYPT(unhex(password), name) AS password,name
+	 from
+	     km_lnt_member
+	 where email = #{email}
+	</select>
+	
+  <select id="emailFind" parameterType="com.pe.bluering.vo.memberVO"  resultType="com.pe.bluering.vo.memberVO">
+		 select
+		     email
+		 from
+		     km_lnt_member
+		 WHERE #{password} = AES_DECRYPT(unhex(PASSWORD), #{name}) and phone=#{phone} and name = #{name}
+	</select>
+	
+	 <select id="passwordFind" parameterType="com.pe.bluering.vo.memberVO"  resultType="com.pe.bluering.vo.memberVO">
+		 select
+		    AES_DECRYPT(unhex(PASSWORD), #{name}) as password
+		 from
+		     km_lnt_member
+		 WHERE  phone=#{phone} and name = #{name} and email = #{email}
+	</select>
+	
+	
+	<insert id="replyInsert" parameterType="com.pe.bluering.vo.replyVO" useGeneratedKeys="true" keyProperty="idx">
+		<![CDATA[
+			insert into km_lnt_reple
+			(num,contents,writer,regdate,level,orders,groupNum)
+			values
+			(#{num},#{contents},#{writer},now(),#{level},#{orders},#{groupNum});
+		]]>
+	</insert>
+	
+	
+	<select id="getRepleAll"  resultType="com.pe.bluering.vo.replyVO" parameterType="com.pe.bluering.vo.replyVO" >
+		SELECT * FROM      
+ 			km_lnt_reple   where num = #{num} and groupNum = #{groupNum}  ORDER BY idx DESC
+	</select>
+
+	<select id="replyCount" resultType="int" parameterType="int" >
+	 select
+	   count(idx)
+	 from
+	     km_lnt_reple
+	 where num = #{num}
+	</select>
+	
+	<select id="getReply" resultType="com.pe.bluering.vo.replyVO"  parameterType="int">
+	select  idx,num,contents,writer,regdate,level,orders,groupNum   FROM      
+ 	km_lnt_reple   where num = #{num} and (level=0) ORDER BY idx desc
+	</select>
+	
+	<select id="getReply2" resultType="com.pe.bluering.vo.replyVO"  parameterType="int">
+			select  idx,num,contents,writer,regdate,level,orders,groupNum   FROM      
+ 			km_lnt_reple   where num = #{num} and (LEVEL=1) ORDER BY idx DESC
+	</select>
+	
+	
+	<select id="getMaxRepleIdx" resultType="int"  >
+			SELECT count(idx) idx FROM km_lnt_reple;
+	</select>
+	
+	<select id="getReRepleCount" resultType="com.pe.bluering.vo.replyVO" parameterType="com.pe.bluering.vo.replyVO" >
+			select count(idx) AS idx, groupNum,level  from km_lnt_reple where LEVEL=1 and num=#{num} GROUP BY groupNum
+	</select>
+	
+	
+	<select id="isEmailUser" resultType="String"   parameterType="String">
+			select email from km_lnt_member where email=#{email}
+	</select>
+
+	
+	
+	<update id="repleModify" parameterType="com.pe.bluering.vo.replyVO">
+				<![CDATA[
+					update km_lnt_reple set
+					contents = #{contents}
+					where
+					idx = #{idx} and num = #{num};
+				]]>
+	</update>
+	
+	<delete id="repleDelete" parameterType="com.pe.bluering.vo.replyVO">
+				<![CDATA[
+					delete from km_lnt_reple 
+					where
+					groupNum = #{groupNum}
+				]]>
+	</delete>
+	
+	<delete id="repleDelete2" parameterType="com.pe.bluering.vo.replyVO">
+				<![CDATA[
+					delete from km_lnt_reple 
+					where
+					idx = #{idx} and num = #{num};
+				]]>
+	</delete>
+	
+	
+	
+	<insert id="noticeInsert" parameterType="com.pe.bluering.vo.thumbVO" useGeneratedKeys="true" keyProperty="idx">
+		<![CDATA[
+			insert into km_lnt_notice (subject,contents,saveFileName,originalFileName) values (#{subject}, #{contents} , #{saveFileName}, #{originalFileName});
+		]]>
+	</insert>
+	
+	<select id="selectNoticeList" parameterType="com.pe.bluering.vo.thumbVO" resultType="com.pe.bluering.vo.thumbVO">
+		 <![CDATA[
+			SELECT *  FROM km_lnt_notice where view= 'y' and 1=1 ORDER BY idx desc
+			limit #{displayPost}, #{postNum}
+		]]>
+	</select>
+	
+	
+
+
+	<select id="modifyNotice" parameterType="int" resultType="com.pe.bluering.vo.thumbVO">
+		 <![CDATA[
+			SELECT *  FROM km_lnt_notice where idx = #{idx};
+		]]>
+	</select>
+
+	<update id="updateNotice" parameterType="com.pe.bluering.vo.thumbVO">
+		<![CDATA[
+			update km_lnt_notice set
+			subject = #{subject},
+			contents = #{contents},
+			saveFileName = #{saveFileName},
+			originalFileName = #{originalFileName}
+			where
+			idx = #{idx}; 
+		]]>
+	</update>
+
+
+	<update id="noticeDelete" parameterType="int">
+					<![CDATA[
+						update km_lnt_notice set
+						view = 'n'
+						where
+						idx = #{idx};
+					]]>
+		</update>
+
+</mapper>

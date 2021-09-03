@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sv">
+
+	<!-- 게시물 총 갯수 -->
+	<select id="surveyCount" resultType="int" parameterType="com.pe.bluering.vo.surveyVO">
+	 	select count(idx) from km_survey; 
+	</select>
+	
+	<!-- 나이 대 갯수 -->
+	<select id="surveyGetAgeCount" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+	 	select ans14, count(ans14) as age  from km_survey group by ans14;
+	</select>
+	
+	<!-- 지역 갯수 -->
+	<select id="surveyGetAreaCount" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+		select ans16, count(ans16) as area  from km_survey group by ans16;
+	</select>
+	
+	<!-- 1번 항목 -->
+	<select id="item1" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+		<![CDATA[
+		SELECT TA.ans1 as ans1_r, COUNT(TA.ans1) AS counter from
+			(
+			select
+			   SUBSTRING_INDEX (SUBSTRING_INDEX(km_survey.ans1,',',all_field_num.n),',',-1) AS ans1
+			          
+			from 
+			   (SELECT  1 as n 
+				 union  all  
+				 select 2 as n
+			    union  all  
+				 select  3 as n
+				 union  all 
+				 select 4 as n
+			    union  all  
+				 select  5 as n
+				 union  all  
+				 SELECT  6  as n) all_field_num INNER  JOIN km_survey
+			    on CHAR_LENGTH(km_survey.ans1)-CHAR_LENGTH(REPLACE (km_survey.ans1,',','' ))>= all_field_num.n - 1
+			) TA
+		GROUP BY TA.ans1
+			]]>
+	</select>
+	
+	<!-- 2번 항목 -->
+	<select id="item2" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+		<![CDATA[
+		SELECT TA.ans2 as ans2_r, COUNT(TA.ans2) AS counter from
+			(
+			select
+			   SUBSTRING_INDEX (SUBSTRING_INDEX(km_survey.ans2,',',all_field_num.n),',',-1) AS ans2
+			          
+			from 
+			   (SELECT  1 as n 
+				 union  all  
+				 select 2 as n
+			    union  all  
+				 select  3 as n
+				 union  all 
+				 select 4 as n
+			    union  all  
+				 select  5 as n
+				 union  all  
+				 SELECT  6  as n) all_field_num INNER  JOIN km_survey
+			    on CHAR_LENGTH(km_survey.ans2)-CHAR_LENGTH(REPLACE (km_survey.ans2,',','' ))>= all_field_num.n - 1
+			) TA
+		GROUP BY TA.ans2
+
+			]]>
+	</select>
+	
+	<!-- 3번 의견 항목 -->
+	<select id="item3" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+			select ans7_3_y,ans7_6_y,ans7_7_y,ans7_9_y,username,userphone from km_survey where ans7_3_y !='' OR ans7_6_y !='' OR ans7_7_y !='' OR ans7_9_y !='' 
+	</select>
+	
+	<!-- 4번 항목 -->
+	<select id="item4" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+		<![CDATA[
+				SELECT TA.ans3 as ans3_r, COUNT(TA.ans3) AS counter from
+			(
+			select
+			   SUBSTRING_INDEX (SUBSTRING_INDEX(km_survey.ans3,',',all_field_num.n),',',-1) AS ans3
+			          
+			from 
+			   (SELECT  1 as n 
+				 union  all  
+				 select 2 as n
+			    union  all  
+				 select  3 as n
+				 union  all 
+				 select 4 as n
+			    union  all  
+				 select  5 as n
+				 union  all
+				 SELECT  6 as n
+				 union  all  
+				 SELECT  7 as n
+				 union  all  
+				 SELECT  8 as n
+				 union  all    
+				 SELECT  9  as n) all_field_num INNER  JOIN km_survey
+			    on CHAR_LENGTH(km_survey.ans3)-CHAR_LENGTH(REPLACE (km_survey.ans3,',','' ))>= all_field_num.n - 1
+			) TA
+		GROUP BY TA.ans3
+
+
+			]]>
+	</select>
+	
+	
+	<!-- 선호하는 캠핑장 -->
+	<select id="item5" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+		<![CDATA[
+		SELECT TA.ans4 as ans4_r, COUNT(TA.ans4) AS counter from
+			(
+			select
+			   SUBSTRING_INDEX (SUBSTRING_INDEX(km_survey.ans4,',',all_field_num.n),',',-1) AS ans4
+			          
+			from 
+			   (SELECT  1 as n 
+				 union  all  
+				 select 2 as n
+			    union  all  
+				 select  3 as n
+				 union  all 
+				 select 4 as n
+			    union  all  
+				 select  5 as n
+				 union  all  
+				 SELECT  6  as n) all_field_num INNER  JOIN km_survey
+			    on CHAR_LENGTH(km_survey.ans4)-CHAR_LENGTH(REPLACE (km_survey.ans4,',','' ))>= all_field_num.n - 1
+			) TA
+		GROUP BY TA.ans4
+
+			]]>
+	</select>
+	
+	<!--캠핑은 누구랑 동행 하시나요? -->
+	<select id="item6" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+		<![CDATA[
+		SELECT TA.ans5 as ans5_r, COUNT(TA.ans5) AS counter from
+			(
+			select
+			   SUBSTRING_INDEX (SUBSTRING_INDEX(km_survey.ans5,',',all_field_num.n),',',-1) AS ans5
+			          
+			from 
+			   (SELECT  1 as n 
+				 union  all  
+				 select 2 as n
+			    union  all  
+				 select  3 as n
+				 union  all 
+				 select 4 as n
+			    union  all  
+				 select  5 as n
+				 union  all  
+				 SELECT  6  as n) all_field_num INNER  JOIN km_survey
+			    on CHAR_LENGTH(km_survey.ans5)-CHAR_LENGTH(REPLACE (km_survey.ans5,',','' ))>= all_field_num.n - 1
+			) TA
+		GROUP BY TA.ans5
+
+			]]>
+	</select>
+	
+	
+	<!--캠핑을 가시는 목적은 무엇인가요? -->
+	<select id="item7" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+		<![CDATA[
+		SELECT TA.ans6 as ans6_r, COUNT(TA.ans6) AS counter from
+			(
+			select
+			   SUBSTRING_INDEX (SUBSTRING_INDEX(km_survey.ans6,',',all_field_num.n),',',-1) AS ans6
+			          
+			from 
+			   (SELECT  1 as n 
+				 union  all  
+				 select 2 as n
+			    union  all  
+				 select  3 as n
+				 union  all 
+				 select 4 as n
+			    union  all  
+				 select  5 as n
+				  union  all  
+				select  6 as n
+				 union  all  
+				 SELECT  7  as n) all_field_num INNER  JOIN km_survey
+			    on CHAR_LENGTH(km_survey.ans6)-CHAR_LENGTH(REPLACE (km_survey.ans6,',','' ))>= all_field_num.n - 1
+			) TA
+		GROUP BY TA.ans6
+
+			]]>
+	</select>
+	
+	
+	<!--캠핑을 즐긴 장소는? -->
+	<select id="item8" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+		<![CDATA[
+		SELECT TA.ans7_1_y as ans7_1_y, COUNT(TA.ans7_1_y) AS counter from
+			(
+			select
+			   SUBSTRING_INDEX (SUBSTRING_INDEX(km_survey.ans7_1_y,',',all_field_num.n),',',-1) AS ans7_1_y
+			          
+			from 
+			   (SELECT  1 as n 
+				 union  all  
+				 select 2 as n
+			    union  all  
+				 select  3 as n
+				 union  all 
+				 select 4 as n
+			    union  all  
+				 select  5 as n
+				  union  all  
+				select  6 as n
+				 union  all
+				select  7 as n
+				 union  all
+				select  8 as n
+				 union  all
+				select  9 as n
+				 union  all
+				 select  10 as n
+				 union  all
+				 select  11 as n
+				 union  all
+				 select  12 as n
+				 union  all
+				 select  13 as n
+				 union  all
+				 select  14 as n
+				 union  all
+				 select  15 as n
+				 union  all
+				 select  16 as n
+				 union  all   
+				 SELECT  17  as n) all_field_num INNER  JOIN km_survey
+			    on CHAR_LENGTH(km_survey.ans7_1_y)-CHAR_LENGTH(REPLACE (km_survey.ans7_1_y,',','' ))>= all_field_num.n - 1
+			) TA
+		GROUP BY TA.ans7_1_y
+
+			]]>
+	</select>
+	
+	<!--제주에서 캠핑을 즐겨보신 장소에 쓰레기 배출을 하기에 어떻하셨나요?-->
+	<select id="item9" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+		<![CDATA[
+			SELECT TA.ans7_5_y as ans7_5_y, COUNT(TA.ans7_5_y) AS counter from
+			(
+			select
+			   SUBSTRING_INDEX (SUBSTRING_INDEX(km_survey.ans7_5_y,',',all_field_num.n),',',-1) AS ans7_5_y
+			          
+			from 
+			   (SELECT  1 as n 
+				 union  all  
+				 SELECT  2  as n) all_field_num INNER  JOIN km_survey
+			    on CHAR_LENGTH(km_survey.ans7_5_y)-CHAR_LENGTH(REPLACE (km_survey.ans7_5_y,',','' ))>= all_field_num.n - 1
+			) TA
+		GROUP BY TA.ans7_5_y
+
+			]]>
+	</select>
+	
+	<!--클린하우스에 대해 알고 있는지?-->
+	<select id="item10" resultType="com.pe.bluering.vo.surveyVO" parameterType="com.pe.bluering.vo.surveyVO">
+		<![CDATA[
+			SELECT TA.ans7_8_y as ans7_8_y, COUNT(TA.ans7_8_y) AS counter from
+			(
+			select
+			   SUBSTRING_INDEX (SUBSTRING_INDEX(km_survey.ans7_8_y,',',all_field_num.n),',',-1) AS ans7_8_y
+			          
+			from 
+			   (SELECT  1 as n 
+				 union  all  
+				 SELECT  2  as n) all_field_num INNER  JOIN km_survey
+			    on CHAR_LENGTH(km_survey.ans7_8_y)-CHAR_LENGTH(REPLACE (km_survey.ans7_8_y,',','' ))>= all_field_num.n - 1
+			) TA
+		GROUP BY TA.ans7_8_y
+
+			]]>
+	</select>
+	
+	<!-- 오프라인 설문조사  List 뽑아내기 -->
+		<select id="surveyoffvo" resultType="com.pe.bluering.vo.surveyOffVO" parameterType="com.pe.bluering.vo.surveyOffVO">
+		<![CDATA[
+			SELECT
+				* 
+			FROM
+				km_lnt_survey
+
+			]]>
+	</select>
+	
+	<select id="surveyoffDetail" resultType="com.pe.bluering.vo.surveyOffVO" parameterType="int">
+		<![CDATA[
+			SELECT
+				* 
+			FROM
+				km_lnt_survey
+			WHERE idx = #{idx}
+			]]>
+	</select>
+	
+	
+	
+	
+	
+
+</mapper>

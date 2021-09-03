@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mg">
+
+	<insert id="insert" parameterType="com.pe.bluering.vo.mgVO" useGeneratedKeys="true" keyProperty="idx">
+		<![CDATA[
+			insert into km_member (name,phone,address,detailaddr1,detailaddr2,postcode,gender,saveFileName,originalFileName,sdate,edate,regdate)
+			values (#{name}, #{phone}, #{address},#{detailaddr1},#{detailaddr2},#{postcode},#{gender},#{saveFileName},#{originalFileName},#{sdate},#{edate},now());
+			
+			insert into km_goods1 (
+			item1,item1_q,item1_re,
+			item2,item2_q,item2_re,
+			item3,item3_q,item3_re,
+			item4,item4_q,item4_re,
+			item5,item5_q,item5_re,
+			item6,item6_q,item6_re,
+			item7,item7_q,item7_re,
+			item8,item8_q,item8_re,
+			item9,item9_q,item9_re
+			)
+			values (
+			#{item1},#{item1_q},#{item1_re},
+			#{item2},#{item2_q},#{item2_re},
+			#{item3},#{item3_q},#{item3_re},
+			#{item4},#{item4_q},#{item4_re},
+			#{item5},#{item5_q},#{item5_re},
+			#{item6},#{item6_q},#{item6_re},
+			#{item7},#{item7_q},#{item7_re},
+			#{item8},#{item8_q},#{item8_re},
+			#{item9},#{item9_q},#{item9_re}
+			);
+
+			insert into km_goods2(
+			item10,item10_q,item10_re,
+			item11,item11_q,item11_re,
+			item12,item12_q,item12_re,
+			item13,item13_q,item13_re,
+			item14,item14_q,item14_re,
+			item15,item15_q,item15_re,
+			item16,item16_q,item16_re,
+			item17,item17_q,item17_re,
+			item18,item18_q,item18_re
+			)
+			values 
+			(
+			#{item10},#{item10_q},#{item10_re},
+			#{item11},#{item11_q},#{item11_re},
+			#{item12},#{item12_q},#{item12_re},
+			#{item13},#{item13_q},#{item13_re},
+			#{item14},#{item14_q},#{item14_re},
+			#{item15},#{item15_q},#{item15_re},
+			#{item16},#{item16_q},#{item16_re},
+			#{item17},#{item17_q},#{item17_re},
+			#{item18},#{item18_q},#{item18_re}
+			);
+			
+			insert into km_goods3 (
+			item19,item19_q,item19_re,
+			item20,item20_q,item20_re,
+			item21,item21_q,item21_re,
+			item22,item22_q,item22_re,
+			item23,item23_q,item23_re,
+			item24,item24_q,item24_re,
+			additem)
+			values (
+			#{item19},#{item19_q},#{item19_re},
+			#{item20},#{item20_q},#{item20_re},
+			#{item21},#{item21_q},#{item21_re},
+			#{item22},#{item22_q},#{item22_re},
+			#{item23},#{item23_q},#{item23_re},
+			#{item24},#{item24_q},#{item24_re},
+			#{additem}
+			);
+		]]>
+	</insert>
+	
+	<select id="selectAll" parameterType="com.pe.bluering.vo.mgVO" resultType="com.pe.bluering.vo.mgVO">
+		<![CDATA[
+			select 
+			idx,
+			name,
+			phone,
+			gender,
+			regdate,
+			address,
+			sdate,
+			edate
+			from km_member  where 1=1
+				]]>
+		<if test="keyword != null and keyword !=''">
+			and (name like CONCAT('%',#{keyword},'%') or phone like CONCAT('%',#{keyword},'%'))
+		</if>
+			order by idx desc
+			limit #{displayPost}, #{postNum}
+	</select>
+	
+	<!-- 게시물 총 갯수 -->
+	<select id="count" resultType="int" parameterType="com.pe.bluering.vo.mgVO">
+	 select count(idx) from km_member 
+
+	</select>
+	
+	<!-- 검색게시물 총 갯수 -->
+	<select id="searchCount" resultType="int"  parameterType="String">
+	 	select count(idx) from km_member where  name like CONCAT('%',#{keyword},'%')  or phone like CONCAT('%',#{keyword},'%')
+
+	</select>
+	
+	
+	
+	<select id="selectDetail" parameterType="int" resultType="com.pe.bluering.vo.mgVO">
+		<![CDATA[
+				select 
+				a.idx,
+				a.name,
+				a.gender,
+				a.phone,
+				a.address,
+				a.detailaddr1,
+				a.detailaddr2,
+				a.postcode,
+				a.regdate,
+				a.originalFileName,
+				a.saveFileName,
+				a.sdate,
+				a.edate,
+				g1.item1,g1.item1_q,g1.item1_re,
+				g1.item2,g1.item2_q,g1.item2_re,
+				g1.item3,g1.item3_q,g1.item3_re,
+				g1.item4,g1.item4_q,g1.item4_re,
+				g1.item5,g1.item5_q,g1.item5_re,
+				g1.item6,g1.item6_q,g1.item6_re,
+				g1.item7,g1.item7_q,g1.item7_re,
+				g1.item8,g1.item8_q,g1.item8_re,
+				g1.item9,g1.item9_q,g1.item9_re,
+	    		g2.item10,g2.item10_q,g2.item10_re,
+	    		g2.item11,g2.item11_q,g2.item11_re,
+	    		g2.item12,g2.item12_q,g2.item12_re,
+				g2.item13,g2.item13_q,g2.item13_re,
+	    		g2.item14,g2.item14_q,g2.item14_re,
+	    		g2.item15,g2.item15_q,g2.item15_re,
+	    		g2.item16,g2.item16_q,g2.item16_re,
+				g2.item17,g2.item17_q,g2.item17_re,
+				g2.item18,g2.item18_q,g2.item18_re,
+				g3.item19,g3.item19_q,g3.item19_re,
+				g3.item20,g3.item20_q,g3.item20_re,
+				g3.item21,g3.item21_q,g3.item21_re,
+				g3.item22,g3.item22_q,g3.item22_re,
+				g3.item23,g3.item23_q,g3.item23_re,
+				g3.item24,g3.item24_q,g3.item24_re,
+				g3.additem
+				FROM 
+				km_member AS a JOIN km_goods1 g1
+				ON a.idx = g1.idx
+				JOIN km_goods2 g2
+				ON g1.idx = g2.idx
+				JOIN km_goods3 g3
+				ON g2.idx = g3.idx
+				WHERE a.idx=#{idx};
+		]]>
+	</select>
+	
+	
+		<update id="update" parameterType="com.pe.bluering.vo.mgVO">
+		<![CDATA[
+			update km_member set
+			name = #{name},
+			phone = #{phone},
+			address = #{address},
+			detailaddr1=#{detailaddr1},
+			detailaddr2=#{detailaddr2},
+			postcode=#{postcode},
+			gender=#{gender},
+			saveFileName=#{saveFileName},
+			originalFileName=#{originalFileName},
+			sdate = #{sdate},
+			edate = #{edate}
+			where
+			idx = #{idx};
+			
+			update km_goods1 set
+			item1=#{item1}, item1_q=#{item1_q}, item1_re=#{item1_re},
+			item2=#{item2}, item2_q=#{item2_q}, item2_re=#{item2_re},
+			item3=#{item3}, item3_q=#{item3_q}, item3_re=#{item3_re},
+			item4=#{item4}, item4_q=#{item4_q}, item4_re=#{item4_re},
+			item5=#{item5}, item5_q=#{item5_q}, item5_re=#{item5_re},
+			item6=#{item6}, item6_q=#{item6_q}, item6_re=#{item6_re},
+			item7=#{item7}, item7_q=#{item7_q}, item7_re=#{item7_re},
+			item8=#{item8}, item8_q=#{item8_q}, item8_re=#{item8_re},
+			item9=#{item9}, item9_q=#{item9_q}, item9_re=#{item9_re}
+			where
+			idx = #{idx}; 
+			
+			update km_goods2 set
+			item10=#{item10}, item10_q=#{item10_q},item10_re=#{item10_re},
+			item11=#{item11}, item11_q=#{item11_q},item11_re=#{item11_re},
+			item12=#{item12}, item12_q=#{item12_q},item12_re=#{item12_re},
+			item13=#{item13}, item13_q=#{item13_q},item13_re=#{item13_re},
+			item14=#{item14}, item14_q=#{item14_q},item14_re=#{item14_re},
+			item15=#{item15}, item15_q=#{item15_q},item15_re=#{item15_re},
+			item16=#{item16}, item16_q=#{item16_q},item16_re=#{item16_re},
+			item17=#{item17}, item17_q=#{item17_q},item17_re=#{item17_re},
+			item18=#{item18}, item18_q=#{item18_q},item18_re=#{item18_re}
+			where
+			idx = #{idx}; 
+			
+			update km_goods3 set
+			item19=#{item19}, item19_q=#{item19_q},item19_re=#{item19_re},
+			item20=#{item20}, item20_q=#{item20_q},item20_re=#{item20_re},
+			item21=#{item21}, item21_q=#{item21_q},item21_re=#{item21_re},
+			item22=#{item22}, item22_q=#{item22_q},item22_re=#{item22_re},
+			item23=#{item23}, item23_q=#{item23_q},item23_re=#{item23_re},
+			item24=#{item24}, item24_q=#{item24_q},item24_re=#{item24_re},
+			additem=#{additem}
+			where
+			idx = #{idx}; 
+		]]>
+	</update>
+	
+	<delete id="delete" parameterType="int">
+			<![CDATA[
+				delete from km_member
+				where
+				idx = #{idx};
+				
+				delete from km_goods1
+				where
+				idx = #{idx};
+				
+				delete from km_goods2
+				where
+				idx = #{idx};
+				
+				delete from km_goods3
+				where
+				idx = #{idx};
+			]]>
+	</delete>
+	
+	
+	<select id="getDeleteFileName" parameterType="int"  resultType="String">
+			<![CDATA[
+				select saveFileName from km_member
+				where
+				idx = #{idx};
+			]]>
+	</select>
+	
+	<select id="getSaveFileName" parameterType="int"  resultType="String">
+			<![CDATA[
+				select saveFileName from km_member
+				where
+				idx = #{idx};
+			]]>
+	</select>
+	
+	<select id="getOriginFileName" parameterType="int"  resultType="String">
+			<![CDATA[
+				select originalFileName from km_member
+				where
+				idx = #{idx};
+			]]>
+	</select>
+	
+	
+	<select id="print" parameterType="int" resultType="com.pe.bluering.vo.mgVO">
+	<![CDATA[
+				select 
+				a.idx,
+				a.name,
+				a.gender,
+				a.phone,
+				a.address,
+				a.detailaddr1,
+				a.detailaddr2,
+				a.postcode,
+				a.regdate,
+				a.originalFileName,
+				a.saveFileName,
+				a.sdate,
+				a.edate,
+				ifnull(g1.item1,'') AS item1, ifnull(g1.item1_q,'') AS item1_q, ifnull(g1.item1_re,'') AS item1_re,
+				ifnull(g1.item2,'') AS item2, ifnull(g1.item2_q,'') AS item2_q, ifnull(g1.item2_re,'') AS item2_re,
+				ifnull(g1.item3,'') AS item3, ifnull(g1.item3_q,'') AS item3_q, ifnull(g1.item3_re,'') AS item3_re,
+				ifnull(g1.item4,'') AS item4, ifnull(g1.item4_q,'') AS item4_q, ifnull(g1.item4_re,'') AS item4_re,
+				ifnull(g1.item5,'') AS item5, ifnull(g1.item5_q,'') AS item5_q, ifnull(g1.item5_re,'') AS item5_re,
+				ifnull(g1.item6,'') AS item6, ifnull(g1.item6_q,'') AS item6_q, ifnull(g1.item6_re,'') AS item6_re,
+				ifnull(g1.item7,'') AS item7, ifnull(g1.item7_q,'') AS item7_q, ifnull(g1.item7_re,'') AS item7_re,
+				ifnull(g1.item8,'') AS item8, ifnull(g1.item8_q,'') AS item8_q, ifnull(g1.item8_re,'') AS item8_re,
+				ifnull(g1.item9,'') AS item9, ifnull(g1.item9_q,'') AS item9_q, ifnull(g1.item9_re,'') AS item9_re,
+	    		ifnull(g2.item10,'') AS item10, ifnull(g2.item10_q,'') AS item10_q, ifnull(g2.item10_re,'') AS item10_re,
+	    		ifnull(g2.item11,'') AS item11, ifnull(g2.item11_q,'') AS item11_q, ifnull(g2.item11_re,'') AS item11_re,
+	    		ifnull(g2.item12,'') AS item12, ifnull(g2.item12_q,'') AS item12_q, ifnull(g2.item12_re,'') AS item12_re,
+				ifnull(g2.item13,'') AS item13, ifnull(g2.item13_q,'') AS item13_q, ifnull(g2.item13_re,'') AS item13_re,
+	    		ifnull(g2.item14,'') AS item14, ifnull(g2.item14_q,'') AS item14_q, ifnull(g2.item14_re,'') AS item14_re,
+	    		ifnull(g2.item15,'') AS item15, ifnull(g2.item15_q,'') AS item15_q, ifnull(g2.item15_re,'') AS item15_re,
+	    		ifnull(g2.item16,'') AS item16, ifnull(g2.item16_q,'') AS item16_q, ifnull(g2.item16_re,'') AS item16_re,
+				ifnull(g2.item17,'') AS item17, ifnull(g2.item17_q,'') AS item17_q, ifnull(g2.item17_re,'') AS item17_re,
+				ifnull(g2.item18,'') AS item18, ifnull(g2.item18_q,'') AS item18_q, ifnull(g2.item18_re,'') AS item18_re,
+				ifnull(g3.item19,'') AS item19, ifnull(g3.item19_q,'') AS item19_q, ifnull(g3.item19_re,'') AS item19_re,
+				ifnull(g3.item20,'') AS item20, ifnull(g3.item20_q,'') AS item20_q, ifnull(g3.item20_re,'') AS item20_re,
+				ifnull(g3.item21,'') AS item21, ifnull(g3.item21_q,'') AS item21_q, ifnull(g3.item21_re,'') AS item21_re,
+				ifnull(g3.item22,'') AS item22, ifnull(g3.item22_q,'') AS item22_q, ifnull(g3.item22_re,'') AS item22_re,
+				ifnull(g3.item23,'') AS item23, ifnull(g3.item23_q,'') AS item23_q, ifnull(g3.item23_re,'') AS item23_re,
+				ifnull(g3.item24,'') AS item24, ifnull(g3.item24_q,'') AS item24_q, ifnull(g3.item24_re,'') AS item24_re,
+				ifnull(g3.additem,'') AS additem
+				FROM 
+				km_member AS a JOIN km_goods1 g1
+				ON a.idx = g1.idx
+				JOIN km_goods2 g2
+				ON g1.idx = g2.idx
+				JOIN km_goods3 g3
+				ON g2.idx = g3.idx
+				WHERE a.idx=#{idx};
+		]]>
+	</select>
+	
+</mapper>
